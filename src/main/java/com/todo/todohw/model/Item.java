@@ -1,12 +1,11 @@
 package com.todo.todohw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "items")
+public class Item {
 
     @Id
     @Column
@@ -19,16 +18,22 @@ public class Category {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Item> itemList;
+    @Column
+    private String dueDate;
 
-    public Category(Long id, String name, String description) {
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    public Item() {
+    }
+
+    public Item(Long id, String name, String description, String dueDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-    }
-
-    public Category() {
+        this.dueDate = dueDate;
     }
 
     public Long getId() {
@@ -55,11 +60,19 @@ public class Category {
         this.description = description;
     }
 
-    public List<Item> getItemList() {
-        return itemList;
+    public String getDueDate() {
+        return dueDate;
     }
 
-    public void setItemList(List<Item> itemList) {
-        this.itemList = itemList;
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
