@@ -1,9 +1,7 @@
 package com.todo.todohw.controller;
 
-import com.todo.todohw.model.Category;
 import com.todo.todohw.model.Item;
-import com.todo.todohw.repository.CategoryRepository;
-import com.todo.todohw.repository.ItemRepository;
+import com.todo.todohw.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,23 +11,17 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class ItemController {
 
-    private ItemRepository itemRepository;
-    private CategoryRepository categoryRepository;
+    private ItemService itemService;
 
     @Autowired
-    public void setItemRepository(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
-
-    @Autowired
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
     }
 
     //get all
     @GetMapping("/{categoryId}/items")
     public List<Item> getItems(@PathVariable Long categoryId) {
-        return itemRepository.findByCategoryId(categoryId);
+        return itemService.getItems(categoryId);
     }
 
     //creat an item
@@ -38,15 +30,7 @@ public class ItemController {
             @PathVariable Long categoryId,
             @RequestBody Item item) {
 
-        Category category =
-                categoryRepository.findById(categoryId).orElse(null);
-
-        if (category != null) {
-            item.setCategory(category);
-            return itemRepository.save(item);
-        }
-
-        return null;
+        return itemService.createItem(categoryId, item);
     }
 
     //get by id
@@ -55,15 +39,7 @@ public class ItemController {
             @PathVariable Long categoryId,
             @PathVariable Long itemId) {
 
-        Item item = itemRepository.findById(itemId).orElse(null);
-
-        if (item != null &&
-                item.getCategory().getId().equals(categoryId)) {
-
-            return item;
-        }
-
-        return null;
+        return itemService.getItem(categoryId, itemId);
     }
 
     //update item
@@ -73,19 +49,7 @@ public class ItemController {
             @PathVariable Long itemId,
             @RequestBody Item itemObject) {
 
-        Item item = itemRepository.findById(itemId).orElse(null);
-
-        if (item != null &&
-                item.getCategory().getId().equals(categoryId)) {
-
-            item.setName(itemObject.getName());
-            item.setDescription(itemObject.getDescription());
-            item.setDueDate(itemObject.getDueDate());
-
-            return itemRepository.save(item);
-        }
-
-        return null;
+        return itemService.updateItem(categoryId, itemId, itemObject);
     }
 
     //delete
@@ -94,12 +58,6 @@ public class ItemController {
             @PathVariable Long categoryId,
             @PathVariable Long itemId) {
 
-        Item item = itemRepository.findById(itemId).orElse(null);
-
-        if (item != null &&
-                item.getCategory().getId().equals(categoryId)) {
-
-            itemRepository.deleteById(itemId);
-        }
+        itemService.deleteItem(categoryId, itemId);
     }
 }
