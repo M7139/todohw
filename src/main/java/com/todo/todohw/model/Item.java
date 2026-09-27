@@ -21,6 +21,7 @@ public class Item {
     @Column
     private String dueDate;
 
+    // many items belong to a one user
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
@@ -71,6 +72,14 @@ public class Item {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Category getCategory() {

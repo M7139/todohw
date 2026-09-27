@@ -1,8 +1,10 @@
 package com.todo.todohw.controller;
 
 import com.todo.todohw.model.User;
+import com.todo.todohw.model.request.LoginRequest;
 import com.todo.todohw.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +18,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    //register
+
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public User createUser(@RequestBody User userObject) {
+        System.out.println("calling createUser ==>");
+        return userService.createUser(userObject);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
+        System.out.println("calling loginUser ==>");
+        return userService.loginUser(loginRequest);
     }
 }
