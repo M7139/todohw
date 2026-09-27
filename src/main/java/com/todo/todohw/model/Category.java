@@ -1,5 +1,6 @@
 package com.todo.todohw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Item> itemList;
+
+    // many categories belong to a one user
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     public Category(Long id, String name, String description) {
         this.id = id;
@@ -61,5 +68,13 @@ public class Category {
 
     public void setItemList(List<Item> itemList) {
         this.itemList = itemList;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

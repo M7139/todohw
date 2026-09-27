@@ -21,6 +21,11 @@ public class Item {
     @Column
     private String dueDate;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id")
